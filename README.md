@@ -34,12 +34,16 @@ Users can add, edit, delete, and mark tasks as completed — all from a clean Bo
 ## 📦 Installation
 
 ### 1. Clone the repo
-```bash
+
 git clone https://github.com/Deepika20011212/Todo-Flask-App.git
 cd Todo-Flask-App
+
+### 2.Create Virtual Environment
 python -m venv venv
 venv\Scripts\activate   # On Windows
 source venv/bin/activate  # On Linux/Mac
+### 3.Install Dependencies
 pip install -r requirements.txt
+### 3.Run the App
 python app.py
 Visit: http://127.0.0.1:5000
