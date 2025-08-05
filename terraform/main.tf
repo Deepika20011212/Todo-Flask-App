@@ -95,6 +95,7 @@ resource "aws_instance" "flask" {
               #!/bin/bash
               apt update -y
               apt install -y docker.io
+              usermod -aG docker ubuntu 
               systemctl start docker
               systemctl enable docker
               EOF
