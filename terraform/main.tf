@@ -84,7 +84,7 @@ resource "aws_key_pair" "default" {
 
 #Create an EC2 instance
 resource "aws_instance" "flask" {
-  ami                    = "ami-06f621d90fa29f6d0" # Ubuntu 22.04
+  ami                    = "ami-0f58b397bc5c1f2e8" # Ubuntu 22.04
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public.id
   key_name               = aws_key_pair.default.key_name
