@@ -53,11 +53,29 @@ cd /home/ubuntu/actions-runner
 ./config.sh --url https://github.com/Deepika20011212/Todo-Flask-App --token <your_token> --labels self-hosted
 sudo ./svc.sh install
 sudo ./svc.sh start
-🤖 Register Self-Hosted GitHub Runner
+
+🤖 Register Self-Hosted GitHub Runner and install aws in Ec2 
+
 cd /home/ubuntu/actions-runner
 ./config.sh --url https://github.com/Deepika20011212/Todo-Flask-App --token <your_token> --labels self-hosted
 sudo ./svc.sh install
 sudo ./svc.sh start
+
+# Update packages
+sudo apt update
+
+# Install required tools
+sudo apt install -y unzip curl
+
+# Download the AWS CLI v2 installer
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+# Unzip the installer
+unzip awscliv2.zip
+
+# Run the install script
+sudo ./aws/install
+
 
 🔐 Set GitHub Secrets
 Add secrets
