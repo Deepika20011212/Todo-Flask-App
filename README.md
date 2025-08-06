@@ -17,9 +17,6 @@ Flask ToDo app on both Public IP and Public DNS of EC2
 <img width="1864" height="912" alt="image" src="https://github.com/user-attachments/assets/16a12a41-b8be-4944-856e-df62ca52fc56" />
 <img width="1839" height="880" alt="image" src="https://github.com/user-attachments/assets/d25f900b-68b9-4fac-bef9-18c93849d5cd" />
 
-
-> 💡 Upload a file named `screenshot.png` to the repo root to show the UI here.
-
 ---
 
 ## 🚀 Tech Stack
@@ -77,6 +74,14 @@ unzip awscliv2.zip
 
 # Run the install script
 sudo ./aws/install
+
+Adding the AmazonSSMManagedEC2InstanceDefaultPolicy to your EC2 instance’s IAM role allows the instance to:
+
+Access SSM (AWS Systems Manager) services
+
+Use Session Manager for secure shell access (without needing SSH)
+
+Fetch ECR credentials securely
 
 
 🔐 Set GitHub Secrets
