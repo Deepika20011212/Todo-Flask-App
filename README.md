@@ -39,9 +39,6 @@ It uses **Docker, Terraform, GitHub Actions**, and **AWS EC2 + ECR** to demonstr
 └── .github/workflows/
 └── cicd.yaml # GitHub Actions pipeline
 
-yaml
-Copy
-Edit
 
 ---
 
