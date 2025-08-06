@@ -43,7 +43,9 @@ jobs:
 
       - name: Push image to ECR
         run: docker push $ECR_REGISTRY:$IMAGE_TAG
-
+      - name: Ping EC2
+        run: ping -c 3 ${{ secrets.EC2_PUBLIC_IP }} || true
+        
       - name: SSH to EC2 & Deploy
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
