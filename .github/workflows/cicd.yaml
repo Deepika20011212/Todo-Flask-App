@@ -6,7 +6,7 @@ on:
 jobs:
   build-deploy:
     # ✅ Use the self-hosted runner inside your AWS EC2
-    runs-on: [self-hosted, aws-runner]
+    runs-on: self-hosted
 
     env:
       IMAGE_TAG: ${{ github.sha }}
