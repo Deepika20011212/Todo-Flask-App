@@ -13,8 +13,10 @@ A complete end-to-end DevOps project demonstrating:
 ---
 
 ## 📸 Screenshot
+Flask ToDo app on both Public IP and Public DNS of EC2
+<img width="1864" height="912" alt="image" src="https://github.com/user-attachments/assets/16a12a41-b8be-4944-856e-df62ca52fc56" />
+<img width="1839" height="880" alt="image" src="https://github.com/user-attachments/assets/d25f900b-68b9-4fac-bef9-18c93849d5cd" />
 
-![App Screenshot](screenshot.png)
 
 > 💡 Upload a file named `screenshot.png` to the repo root to show the UI here.
 
