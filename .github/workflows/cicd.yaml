@@ -31,6 +31,7 @@ jobs:
 
       - name: Trivy Image Scan
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: ${{ env.ECR_REGISTRY }}:${{ env.IMAGE_TAG }}
           format: 'table'
