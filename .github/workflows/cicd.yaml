@@ -1,11 +1,11 @@
-name: Flask App CI/CD      
+name: Flask App CI/CD
+
 on:
   push:
-    branches: [main] 
+    branches: [main]
 
 jobs:
   build-deploy:
-    # ✅ Use the self-hosted runner inside your AWS EC2
     runs-on: self-hosted
 
     env:
@@ -14,45 +14,51 @@ jobs:
       AWS_REGION: ap-south-1
 
     steps:
-      - name: Checkout code 
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      #- name: SonarQube Scan
-      #  uses: SonarSource/sonarqube-scan-action@master
-      #  continue-on-error: true
-      #  env:
-      #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@master
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
-        run: docker build -t $ECR_REGISTRY:$IMAGE_TAG .
+        run: docker build -t ${{ secrets.ECR_REGISTRY }}:${{ github.sha }} .
 
       - name: Trivy Image Scan
         uses: aquasecurity/trivy-action@master
         continue-on-error: true
         with:
-          image-ref: ${{ env.ECR_REGISTRY }}:${{ env.IMAGE_TAG }}
+          image-ref: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
           format: 'table'
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          region: ap-south-1
         env:
-          AWS_REGION: ${{ env.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Push Docker image to ECR
-        run: docker push $ECR_REGISTRY:$IMAGE_TAG
+        run: docker push ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
 
-      # ✅ Deployment directly from the self-hosted runner (no SSH needed)
       - name: Deploy Flask App in EC2
+        env:
+          AWS_REGION: ap-south-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker stop flask || true
           docker rm flask || true
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
           docker pull $ECR_REGISTRY:$IMAGE_TAG
           docker run -d -p 5000:5000 --name flask $ECR_REGISTRY:$IMAGE_TAG
           echo "Flask App deployed successfully!"
