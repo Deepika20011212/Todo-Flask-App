@@ -5,12 +5,13 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
+    # ✅ Use the self-hosted runner inside your AWS EC2
+    runs-on: [self-hosted, aws-runner]
 
     env:
       IMAGE_TAG: ${{ github.sha }}
       ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-      AWS_REGION: ap-south-1  # ✅ Needed for aws-actions/amazon-ecr-login
+      AWS_REGION: ap-south-1
 
     steps:
       - name: Checkout code
@@ -25,7 +26,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build image
+      - name: Build Docker image
         run: docker build -t $ECR_REGISTRY:$IMAGE_TAG .
 
       - name: Trivy Image Scan
@@ -34,28 +35,21 @@ jobs:
           image-ref: ${{ env.ECR_REGISTRY }}:${{ env.IMAGE_TAG }}
           format: 'table'
 
-      - name: Login to ECR
+      - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Push image to ECR
+      - name: Push Docker image to ECR
         run: docker push $ECR_REGISTRY:$IMAGE_TAG
-      - name: Ping EC2
-        run: ping -c 3 ${{ secrets.EC2_PUBLIC_IP }} || true
-        
-      - name: SSH to EC2 & Deploy
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} <<EOF
-            docker stop flask || true
-            docker rm flask || true
-            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
-            docker pull $ECR_REGISTRY:$IMAGE_TAG
-            docker run -d -p 5000:5000 --name flask $ECR_REGISTRY:$IMAGE_TAG
-          EOF
 
-          
+      # ✅ Deployment directly from the self-hosted runner (no SSH needed)
+      - name: Deploy Flask App in EC2
+        run: |
+          docker stop flask || true
+          docker rm flask || true
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+          docker pull $ECR_REGISTRY:$IMAGE_TAG
+          docker run -d -p 5000:5000 --name flask $ECR_REGISTRY:$IMAGE_TAG

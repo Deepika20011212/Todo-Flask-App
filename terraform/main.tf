@@ -109,6 +109,37 @@ EOF
     Name = "flask-app"
   }
 }
+resource "aws_instance" "gh_runner" {
+  ami                         = "ami-0f58b397bc5c1f2e8" # Ubuntu 22.04
+  instance_type               = "t2.micro"
+  subnet_id                   = aws_subnet.public.id
+  key_name                    = aws_key_pair.default.key_name
+  associate_public_ip_address = true
+  vpc_security_group_ids      = [aws_security_group.flask_sg.id]
+
+  tags = {
+    Name = "github-actions-runner"
+  }
+
+  user_data = <<-EOF
+    #!/bin/bash
+    apt update -y
+    apt install -y curl unzip docker.io jq
+    systemctl start docker
+    systemctl enable docker
+    usermod -aG docker ubuntu
+    echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+    # Install GitHub Runner
+    mkdir -p /home/ubuntu/actions-runner && cd /home/ubuntu/actions-runner
+    curl -o actions-runner-linux-x64-2.315.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.315.0/actions-runner-linux-x64-2.315.0.tar.gz
+    tar xzf actions-runner-linux-x64-2.315.0.tar.gz
+    chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
+
+    # You will SSH and run the registration script manually
+  EOF
+}
+
 
 #Create ECR repository
 resource "aws_ecr_repository" "flask_repo" {
