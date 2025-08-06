@@ -84,37 +84,37 @@ resource "aws_key_pair" "default" {
   public_key = file(var.public_key_path)
 }
 
-#Create an EC2 instance
-resource "aws_instance" "flask" {
-  ami                    = "ami-0f58b397bc5c1f2e8" # Ubuntu 22.04
-  instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.public.id
-  key_name               = aws_key_pair.default.key_name
-  vpc_security_group_ids = [aws_security_group.flask_sg.id]
-  associate_public_ip_address = true
+# #Create an EC2 instance
+# resource "aws_instance" "flask" {
+#   ami                    = "ami-0f58b397bc5c1f2e8" # Ubuntu 22.04
+#   instance_type          = "t2.micro"
+#   subnet_id              = aws_subnet.public.id
+#   key_name               = aws_key_pair.default.key_name
+#   vpc_security_group_ids = [aws_security_group.flask_sg.id]
+#   associate_public_ip_address = true
 
-user_data = <<-EOF
-#!/bin/bash
-apt update -y
-apt install -y docker.io unzip curl
-usermod -aG docker ubuntu
-echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-systemctl start docker
-systemctl enable docker
+# user_data = <<-EOF
+# #!/bin/bash
+# apt update -y
+# apt install -y docker.io unzip curl
+# usermod -aG docker ubuntu
+# echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+# systemctl start docker
+# systemctl enable docker
 
-# Install AWS CLI
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+# # Install AWS CLI
+# curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# unzip awscliv2.zip
+# sudo ./aws/install
 
-# Add AWS CLI to PATH (make it available immediately)
-echo 'export PATH=$PATH:/usr/local/bin' >> /home/ubuntu/.bashrc
-source /home/ubuntu/.bashrc
-EOF
-  tags = {
-    Name = "flask-app"
-  }
-}
+# # Add AWS CLI to PATH (make it available immediately)
+# echo 'export PATH=$PATH:/usr/local/bin' >> /home/ubuntu/.bashrc
+# source /home/ubuntu/.bashrc
+# EOF
+#   tags = {
+#     Name = "flask-app"
+#   }
+# }
 resource "aws_instance" "gh_runner" {
   ami                         = "ami-0f58b397bc5c1f2e8" # Ubuntu 22.04
   instance_type               = "t2.micro"
@@ -124,7 +124,7 @@ resource "aws_instance" "gh_runner" {
   vpc_security_group_ids      = [aws_security_group.flask_sg.id]
 
   tags = {
-    Name = "github-actions-runner"
+    Name = "Flask-github-actions-runner"
   }
 
   user_data = <<-EOF
