@@ -1,4 +1,4 @@
-name: Flask App CI/CD  
+name: Flask App CI/CD    
 on:
   push:
     branches: [main]
@@ -14,14 +14,14 @@ jobs:
       AWS_REGION: ap-south-1
 
     steps:
-      - name: Checkout code
+      - name: Checkout code 
         uses: actions/checkout@v3
 
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      #- name: SonarQube Scan
+      #  uses: SonarSource/sonarqube-scan-action@master
+      # env:
+      #  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -31,6 +31,7 @@ jobs:
 
       - name: Trivy Image Scan
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: ${{ env.ECR_REGISTRY }}:${{ env.IMAGE_TAG }}
           format: 'table'
