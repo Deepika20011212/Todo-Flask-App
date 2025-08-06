@@ -64,7 +64,7 @@ def init_db():
     conn.close()
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0',port=8000)
+    app.run(host='0.0.0.0',port=5000)
 # Ensure the database and table exist
   
 # To run the app, use the command: python app.py
