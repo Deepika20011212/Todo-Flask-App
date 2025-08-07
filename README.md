@@ -66,9 +66,6 @@ IAM User
 🏃 Self-Hosted GitHub Runner Setup (on EC2)
 Install GitHub Actions runner and AWS CLI in your EC2 instance:
 
-bash
-Copy
-Edit
 # Update packages
 sudo apt update
 
