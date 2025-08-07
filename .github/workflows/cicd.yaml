@@ -1,7 +1,9 @@
 name: Flask App CI/CD
 on:
   push:
+    paths-ignore: "README.md"
     branches: [main]
+    
 
 jobs:
   build-deploy:
