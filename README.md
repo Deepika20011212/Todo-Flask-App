@@ -29,7 +29,7 @@ Flask ToDo app on both Public IP and Public DNS of EC2
 | IaC           | Terraform                              |
 | CI/CD         | GitHub Actions (self-hosted EC2 runner)|
 | Security Scan | SonarQube, Trivy                       |
-| Cloud Infra   | AWS (EC2, ECR, VPC, S3)                |
+| Cloud Infra   | AWS (EC2, ECR, VPC, S3,IAM)                |
 
 ---
 
