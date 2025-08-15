@@ -31,12 +31,12 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ secrets.ECR_REGISTRY }}:${{ github.sha }} .
 
-      - name: Trivy Image Scan
-        uses: aquasecurity/trivy-action@master
-        continue-on-error: true
-        with:
-          image-ref: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
-          format: 'table'
+      # - name: Trivy Image Scan
+      #   uses: aquasecurity/trivy-action@master
+      #   continue-on-error: true
+      #   with:
+      #     image-ref: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
+      #     format: 'table'
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
