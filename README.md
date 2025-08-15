@@ -6,8 +6,8 @@ A complete end-to-end DevOps project demonstrating:
 - **Infrastructure as Code** using Terraform
 - **CI/CD with GitHub Actions** (self-hosted runner on EC2)
 - **Containerization** using Docker
-- **Static code analysis** with SonarQube
-- **Image vulnerability scanning** using Trivy
+- **Static code analysis** with SonarQube (optional)
+- **Image vulnerability scanning** using Trivy (optional) 
 - **Secure deployment** to AWS EC2 from ECR
 
 ---
@@ -43,7 +43,7 @@ GitHub Repo (main branch)
      | GitHub Actions (on push)
      |   ↳ Checkout
      |   ↳ SonarQube Scan (optional)
-     |   ↳ Trivy Scan
+     |   ↳ Trivy Scan (optional)
      |   ↳ Build Docker Image
      |   ↳ Push to Amazon ECR
      |   ↳ Deploy to EC2 (via Docker)
@@ -99,8 +99,8 @@ Name	Description
 AWS_ACCESS_KEY_ID	IAM user’s access key
 AWS_SECRET_ACCESS_KEY	IAM user’s secret key
 ECR_REGISTRY	ECR URL (<aws_id>.dkr.ecr.region.amazonaws.com)
-SONAR_TOKEN	Token from SonarQube
-SONAR_HOST_URL	SonarQube server URL (http://localhost or a public URL)
+SONAR_TOKEN	Token from SonarQube (optional)
+SONAR_HOST_URL	SonarQube server URL (http://localhost or a public URL) (optional)
 
 📌 Notes
 The runner pulls Docker images from Amazon ECR and runs them on EC2.
